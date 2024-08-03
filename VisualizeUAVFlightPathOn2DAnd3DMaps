@@ -7,6 +7,7 @@ taksimH = 78; % yükseklik (tahmini)
 camlicaLat = 41.0522;
 camlicaLon = 29.0762;
 camlicaH = 219; % yükseklik (tahmini)
+
 Taksim Meydanı ve Çamlıca Kulesi'ni 2-B'de Görüntüleme 
 Bölgenin 2-B perspektifini elde etmek için, geoaxes ve geoplot fonksiyonlarını kullanarak Taksim Meydanı'nın ve Çamlıca Kulesi'nin tepe noktasını konumlarını çizin.
 figure
@@ -43,6 +44,7 @@ heightAboveTerrain = 200; % 200 metre yükseklik
 gx.MapCenter = [taksimLat, taksimLon];
 zoomLevel = heightToZoomLevel(heightAboveTerrain, taksimLat);
 gx.ZoomLevel = zoomLevel;
+
 Taksim Meydanı'nı 3-D Görüntüleyin
 Coğrafi kürenin görünümünü kameranın konumunu değiştirerek kontrol edin. Campos fonksiyonu, ortalama deniz seviyesine göre değil, WGS84 elipsoidine göre yükseklik belirtmenizi gerektirir. Taksim Meydanı'nın yüksekliğini elipsoidal yüksekliğe dönüştürün. Tüm yükseklikler metre cinsindendir.
 % Coğrafi kürede konum belirleme ve kamera yüksekliği ayarlama
@@ -59,6 +61,7 @@ T = readgeotable("sample_uavtrack.gpx", Layer="track_points");
 tlat = T.Shape.Latitude';
 tlon = T.Shape.Longitude';
 talt = T.Elevation';
+
 Uçuş Yönlerini Hesaplayın
 Her izleme noktasında İHA'nın yönünü azimut fonksiyonunu kullanarak hesaplayın.
 wgs84 = wgs84Ellipsoid;
@@ -80,10 +83,12 @@ h2 = h(2:end);
 
 Her bir ardışık nokta çifti arasındaki Öklid mesafesini hypot fonksiyonunu kullanarak hesaplayın. Mesafe metre cinsindendir.
 distanceIncrementIn3D = hypot(hypot(dx, dy), dz);
+
 3 boyutta kümülatif mesafeyi ve toplam mesafeyi metre cinsinden hesaplayın.
 cumulativeDistanceIn3D = cumsum(distanceIncrementIn3D);
 totalDistanceIn3D = sum(distanceIncrementIn3D);
 fprintf("Toplam İHA izleme mesafesi %f metre.\n",totalDistanceIn3D)
+
 Animasyon çizimi için kullanılacak kümülatif mesafe için bir değişken atayın.
 tdist = [0 cumulativeDistanceIn3D];
 
@@ -91,6 +96,7 @@ Taksim Meydanı'nından Çamlıca Kulesi'nin Zirvesine Kadar Olan Uçuş Hattın
 Simüle edilmiş uçuş hattını Taksim Meydanı'nından Çamlıca Kulesi'nin zirvesine kadar çizin. Uçuş hattını çizin. Varsayılan olarak, coğrafi küre hattı görüntü merkezine yerleştirir. Coğrafi eksenlerin görünümü değişmez çünkü daha önce MapCenter ve ZoomLevel değerlerini ayarladınız.
 geoplot3(gg,tlat,tlon,talt,"c","LineWidth",2,"HeightReference","geoid")
 ptrack = geoplot(gx,tlat,tlon,"c","LineWidth",2);
+
 Harita merkezini ve yakınlaştırma seviyesini, küre için kamera yüksekliğini eksenler için yakınlaştırma seviyesine dönüştürerek 3 boyutlu görünümle tutarlı olacak şekilde ayarlayın.
 [clat,clon,cheight] = campos(gg);
 gx.MapCenter = [clat,clon];
@@ -116,8 +122,10 @@ mstart.DisplayName = "Start Location";
 mend.DisplayName = "End Location";
 ptrack.DisplayName = "UAV Track";
 legend(gx)
+
 Bölgenin topolojisini görmek için temel haritayı değiştirin.
 gx.Basemap = "topographic";
+
 İHA'nın konumunu, irtifasını ve yönünü İHA'nın konumuna karşılık gelen özel bir veri ipucu kullanarak görüntüleyin. Gözlemevinin konumundan mesafeyi dahil edin.
 dt = datatip(ptrack,"DataIndex",1,"Location","southeast");
 dtrow = dataTipTextRow("Distance",tdist);
